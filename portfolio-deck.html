@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tanisha Syed — Portfolio Deck</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Libre+Franklin:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #D4A853;
+  --gold-muted: #B8944A;
+  --gold-pale: #F0DCA0;
+  --gold-glow: rgba(212,168,83,0.12);
+  --gold-border: rgba(212,168,83,0.18);
+  --bg: #09090B;
+  --surface: #111113;
+  --border: #1E1E22;
+  --border-light: #27272B;
+  --text: #FAFAFA;
+  --text-sec: #A1A1AA;
+  --text-muted: #636369;
+  --red: #F87171;
+  --green: #4ADE80;
+  --orange: #FB923C;
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Libre Franklin', 'Helvetica Neue', sans-serif;
+  --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; background: var(--bg); color: var(--text); font-family: var(--font-body); overflow: hidden; }
+
+/* Grain overlay */
+body::after {
+  content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 9999;
+  opacity: 0.022; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat; background-size: 128px 128px;
+}
+
+/* Layout */
+.app { display: flex; height: 100vh; }
+
+/* Sidebar */
+.sidebar {
+  width: 244px; flex-shrink: 0; border-right: 1px solid var(--border);
+  display: flex; flex-direction: column; background: var(--surface);
+  position: relative; z-index: 10;
+}
+.sidebar-header { padding: 24px 22px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 11px; }
+.sidebar-logo {
+  width: 34px; height: 34px; border-radius: 10px; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--gold), var(--gold-muted));
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 12px rgba(212,168,83,0.2);
+}
+.sidebar-logo svg { width: 16px; height: 16px; }
+.sidebar-name { font-weight: 700; font-size: 14px; color: var(--text); letter-spacing: 0.2px; }
+.sidebar-sub { font-family: var(--font-mono); font-size: 9.5px; color: var(--text-muted); margin-top: 1px; }
+
+.sidebar-nav { padding: 16px 12px; flex: 1; overflow-y: auto; }
+.sidebar-nav-label { font-family: var(--font-mono); font-size: 9px; letter-spacing: 2.5px; color: var(--text-muted); text-transform: uppercase; padding: 0 10px 12px; }
+
+.nav-btn {
+  display: flex; align-items: center; gap: 11px; width: 100%; padding: 11px 12px;
+  border-radius: 10px; background: transparent; border: 1px solid transparent;
+  cursor: pointer; transition: all 0.2s; color: var(--text-muted);
+  font-family: var(--font-body); font-size: 13px; font-weight: 400; text-align: left;
+}
+.nav-btn:hover { background: rgba(255,255,255,0.03); }
+.nav-btn.active {
+  background: var(--gold-glow); border-color: var(--gold-border);
+  color: var(--gold); font-weight: 600;
+}
+.nav-btn svg { opacity: 0.5; transition: opacity 0.2s; width: 16px; height: 16px; flex-shrink: 0; }
+.nav-btn.active svg { opacity: 1; color: var(--gold); }
+.nav-btn .nav-num { font-family: var(--font-mono); font-size: 9px; margin-left: auto; opacity: 0.4; }
+.nav-btn.active .nav-num { color: var(--gold); opacity: 0.8; }
+
+.sidebar-footer { padding: 16px 22px; border-top: 1px solid var(--border); }
+.sidebar-footer-label { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; font-family: var(--font-mono); font-size: 9.5px; color: var(--gold-muted); }
+.sidebar-footer-label svg { width: 10px; height: 10px; }
+.sidebar-footer-text { font-size: 12px; color: var(--text-sec); line-height: 1.5; }
+
+/* Main area */
+.main { flex: 1; display: flex; flex-direction: column; min-height: 100vh; overflow: hidden; }
+
+/* Top bar */
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 36px; border-bottom: 1px solid var(--border); flex-shrink: 0;
+  background: rgba(17,17,19,0.8); backdrop-filter: blur(12px);
+}
+.topbar-dots { display: flex; align-items: center; gap: 10px; }
+.dot {
+  width: 8px; height: 4px; border-radius: 3px; background: var(--border);
+  cursor: pointer; transition: all 0.35s cubic-bezier(.16,1,.3,1);
+}
+.dot.active { width: 28px; background: var(--gold); }
+.topbar-counter { font-family: var(--font-mono); font-size: 10px; color: var(--text-muted); margin-left: 8px; }
+.topbar-btns { display: flex; gap: 8px; }
+.nav-arrow {
+  display: flex; align-items: center; justify-content: center;
+  width: 34px; height: 34px; border-radius: 8px;
+  background: var(--surface); border: 1px solid var(--border);
+  color: var(--text-sec); cursor: pointer; transition: all 0.2s;
+}
+.nav-arrow:disabled { background: transparent; border-color: transparent; color: var(--border); cursor: default; }
+.nav-arrow.next-gold { background: linear-gradient(135deg, var(--gold), var(--gold-muted)); border: none; color: var(--bg); }
+.nav-arrow.next-gold:disabled { background: transparent; border: 1px solid transparent; color: var(--border); }
+.nav-arrow svg { width: 16px; height: 16px; }
+
+/* Content area */
+.content { flex: 1; padding: 44px 48px 64px; max-width: 920px; overflow-y: auto; }
+
+/* Slide panels */
+.slide { display: none; }
+.slide.active { display: block; animation: fadeUp 0.65s cubic-bezier(.16,1,.3,1) forwards; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Reusable badge */
+.badge {
+  display: inline-flex; align-items: center; gap: 6px; padding: 5px 14px; border-radius: 100px;
+  background: var(--gold-glow); border: 1px solid var(--gold-border);
+  font-size: 10px; letter-spacing: 2.2px; text-transform: uppercase;
+  color: var(--gold); font-family: var(--font-mono); font-weight: 500;
+}
+.badge svg { width: 11px; height: 11px; }
+
+/* Section headers */
+.sec-header { margin-bottom: 48px; }
+.sec-header .badge { margin-bottom: 18px; }
+.sec-title {
+  font-family: var(--font-display); font-size: 42px; font-weight: 500;
+  color: var(--text); line-height: 1.15; margin: 0 0 14px; letter-spacing: -0.5px;
+}
+.sec-title em { color: var(--gold); font-style: italic; }
+.sec-subtitle { font-size: 15px; color: var(--text-sec); line-height: 1.7; max-width: 520px; }
+
+/* Cards */
+.card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+  padding: 28px; position: relative; overflow: hidden; transition: border-color 0.3s, transform 0.3s;
+}
+.card.hoverable:hover { border-color: var(--gold-border); transform: translateY(-2px); }
+.card-glow { position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent 10%, var(--gold) 50%, transparent 90%); opacity: 0.35; }
+
+/* Stagger children */
+.stagger > * { opacity: 0; animation: fadeUp 0.65s cubic-bezier(.16,1,.3,1) forwards; }
+.stagger > *:nth-child(1) { animation-delay: 0.08s; }
+.stagger > *:nth-child(2) { animation-delay: 0.16s; }
+.stagger > *:nth-child(3) { animation-delay: 0.24s; }
+.stagger > *:nth-child(4) { animation-delay: 0.32s; }
+.stagger > *:nth-child(5) { animation-delay: 0.40s; }
+.stagger > *:nth-child(6) { animation-delay: 0.48s; }
+.stagger > *:nth-child(7) { animation-delay: 0.56s; }
+
+/* ── SLIDE 1 specifics ── */
+.s1-hero-title {
+  font-family: var(--font-display); font-size: 54px; font-weight: 500;
+  color: var(--text); line-height: 1.1; margin: 0 0 18px; letter-spacing: -1px;
+}
+.s1-hero-title em { color: var(--gold); font-style: italic; }
+.s1-hero-sub { font-size: 16px; color: var(--text-sec); line-height: 1.75; max-width: 540px; }
+.s1-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 0; }
+.s1-card-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 22px; }
+.s1-icon-box {
+  width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center;
+  background: var(--gold-glow); border: 1px solid var(--gold-border); color: var(--gold);
+}
+.s1-icon-box svg { width: 22px; height: 22px; }
+.s1-num { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); }
+.s1-card h3 { font-family: var(--font-display); font-weight: 600; font-size: 21px; color: var(--text); margin: 0 0 10px; letter-spacing: -0.2px; }
+.s1-card p { font-size: 13.5px; color: var(--text-sec); line-height: 1.7; }
+.s1-badges { display: flex; gap: 12px; margin-top: 36px; flex-wrap: wrap; }
+.s1-tag {
+  display: flex; align-items: center; gap: 7px; padding: 7px 15px; border-radius: 8px;
+  background: rgba(255,255,255,0.02); border: 1px solid var(--border);
+  font-size: 12px; color: var(--text-sec);
+}
+.s1-tag svg { width: 13px; height: 13px; }
+
+/* ── SLIDE 2 specifics ── */
+.s2-labels { display: grid; grid-template-columns: 1fr 56px 1fr; padding-bottom: 8px; }
+.s2-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 2px; color: var(--gold-muted); text-transform: uppercase; }
+.s2-row { display: grid; grid-template-columns: 1fr 56px 1fr; align-items: center; margin-bottom: 14px; }
+.s2-card { padding: 18px 22px !important; display: flex; align-items: center; gap: 14px; border-radius: 12px !important; }
+.s2-card svg.ic { width: 17px; height: 17px; color: var(--gold); flex-shrink: 0; }
+.s2-card .label { font-weight: 600; font-size: 14px; color: var(--text); }
+.s2-card .sub { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.s2-card-right { border-color: var(--gold-border) !important; background: rgba(212,168,83,0.03) !important; }
+.s2-card-right .sub { color: var(--gold-muted); }
+.s2-arrow {
+  display: flex; justify-content: center; align-items: center;
+}
+.s2-arrow-circle {
+  width: 34px; height: 34px; border-radius: 999px; display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, var(--gold), var(--gold-muted));
+  box-shadow: 0 0 20px rgba(212,168,83,0.25);
+}
+.s2-arrow-circle svg { width: 15px; height: 15px; color: var(--bg); }
+.s2-quote {
+  margin-top: 40px; padding: 24px 32px; border-radius: 14px;
+  background: linear-gradient(135deg, rgba(212,168,83,0.06), rgba(212,168,83,0.02));
+  border-left: 3px solid var(--gold);
+}
+.s2-quote p { font-family: var(--font-display); font-size: 20px; color: var(--gold-pale); font-style: italic; line-height: 1.5; font-weight: 500; }
+
+/* ── SLIDE 3 specifics ── */
+.s3-metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 36px; }
+.s3-metric { text-align: center; padding: 30px 20px !important; }
+.s3-metric svg { width: 18px; height: 18px; color: var(--gold); margin-bottom: 16px; }
+.s3-metric .val { font-family: var(--font-display); font-size: 40px; font-weight: 600; color: var(--text); line-height: 1; }
+.s3-metric .lbl { font-size: 12px; color: var(--text-muted); margin-top: 10px; letter-spacing: 0.3px; }
+.s3-timeline-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 2.5px; color: var(--gold-muted); text-transform: uppercase; margin-bottom: 24px; }
+.s3-phase { display: grid; grid-template-columns: 48px 1fr; gap: 18px; }
+.s3-phase + .s3-phase { padding-top: 24px; margin-top: 24px; border-top: 1px solid var(--border); }
+.s3-dot {
+  width: 36px; height: 36px; border-radius: 999px; display: flex; align-items: center; justify-content: center;
+  background: var(--gold-glow); border: 1px solid var(--gold-border);
+  font-family: var(--font-mono); font-size: 11px; color: var(--gold); font-weight: 600;
+}
+.s3-phase h4 { font-family: var(--font-display); font-weight: 600; font-size: 19px; color: var(--text); margin-bottom: 6px; letter-spacing: -0.2px; }
+.s3-phase p { font-size: 13.5px; color: var(--text-sec); line-height: 1.7; }
+
+/* ── SLIDE 4 specifics ── */
+.s4-table { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+.s4-toolbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 24px; border-bottom: 1px solid var(--border);
+  background: rgba(255,255,255,0.01);
+}
+.s4-toolbar-left { display: flex; align-items: center; gap: 10px; }
+.s4-toolbar-left svg { width: 15px; height: 15px; color: var(--gold); }
+.s4-toolbar-left .title { font-weight: 600; font-size: 13px; color: var(--text); }
+.s4-live {
+  font-size: 9px; padding: 3px 10px; border-radius: 999px; font-family: var(--font-mono); font-weight: 500;
+  background: rgba(74,222,128,0.1); color: var(--green); letter-spacing: 1.5px;
+}
+.s4-toolbar-btns { display: flex; gap: 8px; }
+.s4-toolbar-btn {
+  display: flex; align-items: center; gap: 5px; padding: 5px 12px; border-radius: 6px;
+  border: 1px solid var(--border); font-size: 11.5px; color: var(--text-muted); cursor: pointer; background: none;
+  font-family: var(--font-body);
+}
+.s4-toolbar-btn svg { width: 12px; height: 12px; }
+.s4-thead {
+  display: grid; grid-template-columns: 88px 1.4fr 76px 1.3fr 100px;
+  padding: 10px 24px; border-bottom: 1px solid var(--border);
+  font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 1.8px; color: var(--text-muted); text-transform: uppercase;
+}
+.s4-thead span:last-child { text-align: right; }
+.s4-row {
+  display: grid; grid-template-columns: 88px 1.4fr 76px 1.3fr 100px;
+  padding: 15px 24px; align-items: center;
+  border-bottom: 1px solid var(--border); transition: background 0.2s;
+}
+.s4-row:last-child { border-bottom: none; }
+.s4-row:hover { background: rgba(212,168,83,0.03); }
+.s4-rid { font-family: var(--font-mono); font-size: 12px; color: var(--gold); font-weight: 500; }
+.s4-desc { font-size: 13px; color: var(--text); }
+.s4-impact { display: flex; align-items: center; gap: 6px; font-size: 12px; }
+.s4-impact-dot { width: 6px; height: 6px; border-radius: 999px; }
+.s4-mit { font-size: 12.5px; color: var(--text-sec); }
+.s4-status {
+  display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 6px;
+  font-size: 11px; font-weight: 500; float: right;
+}
+.s4-status svg { width: 11px; height: 11px; }
+.s4-chips { display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
+.s4-chip {
+  display: flex; align-items: center; gap: 6px; padding: 6px 13px; border-radius: 8px;
+  background: var(--surface); border: 1px solid var(--border); font-size: 11.5px;
+}
+.s4-chip-dot { width: 5px; height: 5px; border-radius: 999px; }
+
+/* ── SLIDE 5 specifics ── */
+.s5-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.s5-chart-label { font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 2px; color: var(--gold-muted); text-transform: uppercase; margin-bottom: 4px; }
+.s5-chart-title { font-family: var(--font-display); font-weight: 600; font-size: 19px; color: var(--text); margin-bottom: 28px; letter-spacing: -0.2px; }
+.s5-chart-title span { font-family: var(--font-body); font-size: 13px; color: var(--text-muted); font-weight: 400; }
+.s5-donut-wrap { display: flex; align-items: center; gap: 32px; }
+.s5-legend { display: flex; flex-direction: column; gap: 14px; }
+.s5-legend-item { display: flex; align-items: center; gap: 10px; }
+.s5-legend-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+.s5-legend-label { font-size: 13px; color: var(--text); }
+.s5-legend-val { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); }
+
+.s5-bars { display: flex; align-items: flex-end; gap: 16px; height: 130px; }
+.s5-bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; height: 100%; justify-content: flex-end; }
+.s5-bar-val { font-family: var(--font-mono); font-size: 11px; color: var(--text-sec); margin-bottom: 8px; }
+.s5-bar-val.highlight { color: var(--gold); font-weight: 600; }
+.s5-bar {
+  width: 100%; border-radius: 8px 8px 4px 4px; min-height: 4px;
+  background: linear-gradient(to top, rgba(212,168,83,0.15), rgba(212,168,83,0.35));
+  transition: height 1.2s cubic-bezier(.16,1,.3,1);
+}
+.s5-bar.highlight { background: linear-gradient(to top, var(--gold-muted), var(--gold)); }
+.s5-bar-label { font-size: 11px; color: var(--text-muted); margin-top: 10px; }
+.s5-trend { display: flex; align-items: center; gap: 6px; margin-top: 20px; color: var(--green); font-size: 12px; }
+.s5-trend svg { width: 14px; height: 14px; }
+
+.s5-kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 18px; }
+.s5-kpi { padding: 18px 20px !important; display: flex; align-items: center; gap: 14px; }
+.s5-kpi svg { width: 16px; height: 16px; color: var(--gold); flex-shrink: 0; }
+.s5-kpi .kpi-label { font-size: 11px; color: var(--text-muted); }
+.s5-kpi .kpi-val { font-family: var(--font-display); font-size: 24px; font-weight: 600; color: var(--text); letter-spacing: -0.3px; }
+
+.s5-cta {
+  text-align: center; margin-top: 32px; padding: 26px 32px; border-radius: 16px;
+  background: linear-gradient(135deg, rgba(212,168,83,0.07), rgba(212,168,83,0.02));
+  border: 1px solid var(--gold-border);
+}
+.s5-cta h3 { font-family: var(--font-display); font-size: 22px; color: var(--text); font-weight: 500; margin-bottom: 6px; }
+.s5-cta h3 em { color: var(--gold); font-style: italic; }
+.s5-cta p { font-size: 13px; color: var(--text-sec); }
+
+/* Donut animation */
+.donut-seg { transition: stroke-dasharray 1.4s cubic-bezier(.16,1,.3,1); }
+
+/* Scrollbar */
+.content::-webkit-scrollbar { width: 4px; }
+.content::-webkit-scrollbar-track { background: transparent; }
+.content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<!-- ═══ SVG ICON DEFS (hidden) ═══ -->
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></symbol>
+  <symbol id="i-cpu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/></symbol>
+  <symbol id="i-award" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></symbol>
+  <symbol id="i-grad" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 3 3 6 3s6-1 6-3v-5"/></symbol>
+  <symbol id="i-briefcase" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></symbol>
+  <symbol id="i-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></symbol>
+  <symbol id="i-arrow-lr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="7 16 3 12 7 8"/><line x1="3" y1="12" x2="21" y2="12"/><polyline points="17 8 21 12 17 16"/></symbol>
+  <symbol id="i-file-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M9 15l2 2 4-4"/></symbol>
+  <symbol id="i-alert-tri" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></symbol>
+  <symbol id="i-git-branch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 01-9 9"/></symbol>
+  <symbol id="i-activity" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></symbol>
+  <symbol id="i-check-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></symbol>
+  <symbol id="i-database" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></symbol>
+  <symbol id="i-bar-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></symbol>
+  <symbol id="i-zap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></symbol>
+  <symbol id="i-filter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol>
+  <symbol id="i-target" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol>
+  <symbol id="i-trending-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></symbol>
+  <symbol id="i-chevron-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></symbol>
+  <symbol id="i-chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></symbol>
+</svg>
+
+<div class="app">
+  <!-- ═══ SIDEBAR ═══ -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo"><svg><use href="#i-shield"/></svg></div>
+      <div>
+        <div class="sidebar-name">Tanisha Syed</div>
+        <div class="sidebar-sub">BBA · CAPM · CSPO</div>
+      </div>
+    </div>
+    <div class="sidebar-nav">
+      <div class="sidebar-nav-label">Sections</div>
+      <div id="nav-items"></div>
+    </div>
+    <div class="sidebar-footer">
+      <div class="sidebar-footer-label"><svg><use href="#i-lock"/></svg> Target Role</div>
+      <div class="sidebar-footer-text">Regulatory Compliance Analyst — Interac</div>
+    </div>
+  </aside>
+
+  <!-- ═══ MAIN ═══ -->
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-dots" id="topbar-dots"></div>
+      <div class="topbar-btns">
+        <button class="nav-arrow" id="btn-prev" onclick="go(active-1)"><svg><use href="#i-chevron-left"/></svg></button>
+        <button class="nav-arrow next-gold" id="btn-next" onclick="go(active+1)"><svg><use href="#i-chevron-right"/></svg></button>
+      </div>
+    </div>
+    <div class="content" id="content">
+
+      <!-- ════ SLIDE 1 ════ -->
+      <div class="slide active" id="slide-0">
+        <div class="stagger">
+          <div>
+            <div class="badge" style="margin-bottom:18px"><svg><use href="#i-shield"/></svg> Portfolio Presentation</div>
+            <h1 class="s1-hero-title">Operational Excellence<br><em>&amp; Regulatory Integrity</em></h1>
+            <p class="s1-hero-sub">Bridging the gap between Agile Project Management and Regulatory Compliance. A portfolio demonstrating readiness from day one.</p>
+          </div>
+          <div class="s1-grid" style="margin-top:40px">
+            <div class="card hoverable s1-card">
+              <div class="card-glow"></div>
+              <div class="s1-card-head"><div class="s1-icon-box"><svg><use href="#i-users"/></svg></div><span class="s1-num">01</span></div>
+              <h3>Governance at Scale</h3>
+              <p>Managed frameworks serving 10,000+ users at Yorkville University — policy architecture, SOPs, and full operational tracking from zero.</p>
+            </div>
+            <div class="card hoverable s1-card">
+              <div class="card-glow"></div>
+              <div class="s1-card-head"><div class="s1-icon-box"><svg><use href="#i-cpu"/></svg></div><span class="s1-num">02</span></div>
+              <h3>Technical Risk Fluency</h3>
+              <p>Built DecisionEase (AI Agent) and a RAG-based Chatbot trained across 5 departments — proving product risk literacy and developer collaboration.</p>
+            </div>
+            <div class="card hoverable s1-card">
+              <div class="card-glow"></div>
+              <div class="s1-card-head"><div class="s1-icon-box"><svg><use href="#i-award"/></svg></div><span class="s1-num">03</span></div>
+              <h3>Certified Process Rigor</h3>
+              <p>CAPM and CSPO methodology applied to Compliance — structured analysis, evidence-based decisions, and full traceability.</p>
+            </div>
+          </div>
+          <div class="s1-badges">
+            <div class="s1-tag"><svg><use href="#i-grad"/></svg> BBA, Project Management</div>
+            <div class="s1-tag"><svg><use href="#i-briefcase"/></svg> CAPM Certified</div>
+            <div class="s1-tag"><svg><use href="#i-layers"/></svg> CSPO Certified</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════ SLIDE 2 ════ -->
+      <div class="slide" id="slide-1">
+        <div class="stagger">
+          <div class="sec-header">
+            <div class="badge" style="margin-bottom:18px"><svg><use href="#i-arrow-lr"/></svg> Skills Translation</div>
+            <h2 class="sec-title">The Logic Is <em>Identical</em></h2>
+            <p class="sec-subtitle">Agile project management and regulatory compliance share the same foundational discipline: maintaining an unshakeable Chain of Custody.</p>
+          </div>
+
+          <div class="s2-labels">
+            <div class="s2-label">My Proven Skills</div><div></div>
+            <div class="s2-label" style="text-align:right">Role Requirements</div>
+          </div>
+
+          <div class="s2-row">
+            <div class="card s2-card"><svg class="ic"><use href="#i-layers"/></svg><div><div class="label">Agile Backlog Management</div><div class="sub">Jira</div></div></div>
+            <div class="s2-arrow"><div class="s2-arrow-circle"><svg><use href="#i-arrow-right"/></svg></div></div>
+            <div class="card s2-card s2-card-right"><svg class="ic"><use href="#i-file-check"/></svg><div><div class="label">Regulatory Audit Trails</div><div class="sub">AuditBoard</div></div></div>
+          </div>
+          <div class="s2-row">
+            <div class="card s2-card"><svg class="ic"><use href="#i-alert-tri"/></svg><div><div class="label">Risk Registers</div><div class="sub">CAPM Framework</div></div></div>
+            <div class="s2-arrow"><div class="s2-arrow-circle"><svg><use href="#i-arrow-right"/></svg></div></div>
+            <div class="card s2-card s2-card-right"><svg class="ic"><use href="#i-shield"/></svg><div><div class="label">Operational Risk Mgmt</div><div class="sub">RPAA Framework</div></div></div>
+          </div>
+          <div class="s2-row">
+            <div class="card s2-card"><svg class="ic"><use href="#i-git-branch"/></svg><div><div class="label">Sprint Retrospectives</div><div class="sub">Scrum Ceremonies</div></div></div>
+            <div class="s2-arrow"><div class="s2-arrow-circle"><svg><use href="#i-arrow-right"/></svg></div></div>
+            <div class="card s2-card s2-card-right"><svg class="ic"><use href="#i-activity"/></svg><div><div class="label">Incident Reporting</div><div class="sub">GRC Workflows</div></div></div>
+          </div>
+
+          <div class="s2-quote"><p>"It's about maintaining an unshakeable Chain of Custody — whether the artifact is a sprint backlog or an audit trail."</p></div>
+        </div>
+      </div>
+
+      <!-- ════ SLIDE 3 ════ -->
+      <div class="slide" id="slide-2">
+        <div class="stagger">
+          <div class="sec-header">
+            <div class="badge" style="margin-bottom:18px"><svg><use href="#i-book"/></svg> Case Study</div>
+            <h2 class="sec-title">Mentorship at <em>Scale</em></h2>
+            <p class="sec-subtitle">Yorkville University — operational governance comparable to payment compliance tracking.</p>
+          </div>
+
+          <div class="s3-metrics">
+            <div class="card s3-metric"><svg><use href="#i-users"/></svg><div class="val" id="counter">0+</div><div class="lbl">Active Users Managed</div></div>
+            <div class="card s3-metric"><svg><use href="#i-shield"/></svg><div class="val">0</div><div class="lbl">Policy Breaches</div></div>
+            <div class="card s3-metric"><svg><use href="#i-check-circle"/></svg><div class="val">100%</div><div class="lbl">Policy Adherence</div></div>
+          </div>
+
+          <div class="card" style="padding:32px 30px">
+            <div class="s3-timeline-label">Implementation Timeline</div>
+            <div class="s3-phase">
+              <div class="s3-dot">01</div>
+              <div><h4>Policy Architecture</h4><p>Defined SOPs, escalation paths, and accountability structures for 15+ mentors serving a student body of 10,000.</p></div>
+            </div>
+            <div class="s3-phase">
+              <div class="s3-dot">02</div>
+              <div><h4>Tracking &amp; Monitoring</h4><p>Built engagement dashboards and compliance tracking to guarantee zero policy breaches and full accountability.</p></div>
+            </div>
+            <div class="s3-phase">
+              <div class="s3-dot">03</div>
+              <div><h4>Continuous Improvement</h4><p>Ran quarterly retrospectives, updated processes iteratively, and maintained sustained 100% policy adherence.</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════ SLIDE 4 ════ -->
+      <div class="slide" id="slide-3">
+        <div class="stagger">
+          <div class="sec-header">
+            <div class="badge" style="margin-bottom:18px"><svg><use href="#i-database"/></svg> Aptitude Demonstration</div>
+            <h2 class="sec-title">RPAA &amp; <em>AuditBoard</em></h2>
+            <p class="sec-subtitle">A mock GRC Dashboard proving workflow comprehension — understanding the logic before touching the tool.</p>
+          </div>
+
+          <div class="s4-table">
+            <div class="s4-toolbar">
+              <div class="s4-toolbar-left">
+                <svg><use href="#i-shield"/></svg>
+                <span class="title">RPAA Operational Risk Register</span>
+                <span class="s4-live">● LIVE</span>
+              </div>
+              <div class="s4-toolbar-btns">
+                <button class="s4-toolbar-btn"><svg><use href="#i-filter"/></svg> Filter</button>
+                <button class="s4-toolbar-btn"><svg><use href="#i-search"/></svg> Search</button>
+              </div>
+            </div>
+            <div class="s4-thead"><span>Risk ID</span><span>Description</span><span>Impact</span><span>Mitigation</span><span>Status</span></div>
+            <div class="s4-row"><span class="s4-rid">RPAA-001</span><span class="s4-desc">Third-Party Vendor Failure</span><span class="s4-impact"><span class="s4-impact-dot" style="background:var(--red)"></span><span style="color:var(--red)">High</span></span><span class="s4-mit">Vendor Intake Form + Quarterly Review</span><span class="s4-status" style="background:rgba(212,168,83,0.08);color:var(--gold)"><svg><use href="#i-eye"/></svg> Monitoring</span></div>
+            <div class="s4-row"><span class="s4-rid">RPAA-002</span><span class="s4-desc">Data Breach — Customer PII</span><span class="s4-impact"><span class="s4-impact-dot" style="background:var(--orange)"></span><span style="color:var(--orange)">Critical</span></span><span class="s4-mit">Encryption Audit + Access Controls</span><span class="s4-status" style="background:rgba(251,146,60,0.08);color:var(--orange)"><svg><use href="#i-alert-tri"/></svg> Active</span></div>
+            <div class="s4-row"><span class="s4-rid">RPAA-003</span><span class="s4-desc">Regulatory Reporting Delay</span><span class="s4-impact"><span class="s4-impact-dot" style="background:var(--gold)"></span><span style="color:var(--gold)">Medium</span></span><span class="s4-mit">Automated Deadline Tracking</span><span class="s4-status" style="background:rgba(74,222,128,0.08);color:var(--green)"><svg><use href="#i-check-circle"/></svg> Resolved</span></div>
+            <div class="s4-row"><span class="s4-rid">RPAA-004</span><span class="s4-desc">Payment Processing Downtime</span><span class="s4-impact"><span class="s4-impact-dot" style="background:var(--red)"></span><span style="color:var(--red)">High</span></span><span class="s4-mit">Redundancy Protocol + Incident Playbook</span><span class="s4-status" style="background:rgba(212,168,83,0.08);color:var(--gold)"><svg><use href="#i-eye"/></svg> Monitoring</span></div>
+            <div class="s4-row"><span class="s4-rid">RPAA-005</span><span class="s4-desc">Anti-Money Laundering Gap</span><span class="s4-impact"><span class="s4-impact-dot" style="background:var(--orange)"></span><span style="color:var(--orange)">Critical</span></span><span class="s4-mit">Enhanced Due Diligence Process</span><span class="s4-status" style="background:rgba(251,146,60,0.08);color:var(--orange)"><svg><use href="#i-alert-tri"/></svg> Active</span></div>
+          </div>
+
+          <div class="s4-chips">
+            <div class="s4-chip" style="color:var(--gold)"><span class="s4-chip-dot" style="background:var(--gold)"></span> 5 Active Risks</div>
+            <div class="s4-chip" style="color:var(--orange)"><span class="s4-chip-dot" style="background:var(--orange)"></span> 2 Critical</div>
+            <div class="s4-chip" style="color:var(--green)"><span class="s4-chip-dot" style="background:var(--green)"></span> 1 Resolved</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════ SLIDE 5 ════ -->
+      <div class="slide" id="slide-4">
+        <div class="stagger">
+          <div class="sec-header">
+            <div class="badge" style="margin-bottom:18px"><svg><use href="#i-bar-chart"/></svg> Data Visualization</div>
+            <h2 class="sec-title">Regulatory Health <em>Dashboard</em></h2>
+            <p class="sec-subtitle">Mock Power BI concept — driving data-driven compliance decisions with clear, actionable visuals.</p>
+          </div>
+
+          <div class="s5-grid">
+            <!-- Donut -->
+            <div class="card" style="padding:28px 26px">
+              <div class="s5-chart-label">Audit Deliverables</div>
+              <div class="s5-chart-title">Status Overview</div>
+              <div class="s5-donut-wrap">
+                <svg width="110" height="110" viewBox="0 0 110 110" id="donut">
+                  <circle cx="55" cy="55" r="42" fill="none" stroke="var(--gold)" stroke-width="18" class="donut-seg" id="seg-0" stroke-dasharray="0 263.89" stroke-dashoffset="-65.97" stroke-linecap="butt"/>
+                  <circle cx="55" cy="55" r="42" fill="none" stroke="var(--red)" stroke-width="18" class="donut-seg" id="seg-1" stroke-dasharray="0 263.89" stroke-dashoffset="124.03" stroke-linecap="butt"/>
+                  <circle cx="55" cy="55" r="42" fill="none" stroke="var(--green)" stroke-width="18" class="donut-seg" id="seg-2" stroke-dasharray="0 263.89" stroke-dashoffset="171.54" stroke-linecap="butt"/>
+                  <text x="55" y="51" text-anchor="middle" fill="var(--text)" style="font-size:17px;font-family:var(--font-display);font-weight:700">72%</text>
+                  <text x="55" y="64" text-anchor="middle" fill="var(--text-muted)" style="font-size:7px;font-family:var(--font-body)">On Track</text>
+                </svg>
+                <div class="s5-legend">
+                  <div class="s5-legend-item"><div class="s5-legend-dot" style="background:var(--gold)"></div><div><div class="s5-legend-label">On Track</div><div class="s5-legend-val">72%</div></div></div>
+                  <div class="s5-legend-item"><div class="s5-legend-dot" style="background:var(--red)"></div><div><div class="s5-legend-label">At Risk</div><div class="s5-legend-val">18%</div></div></div>
+                  <div class="s5-legend-item"><div class="s5-legend-dot" style="background:var(--green)"></div><div><div class="s5-legend-label">Completed</div><div class="s5-legend-val">10%</div></div></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bars -->
+            <div class="card" style="padding:28px 26px">
+              <div class="s5-chart-label">Performance Metric</div>
+              <div class="s5-chart-title">Incident Resolution <span>(days)</span></div>
+              <div class="s5-bars">
+                <div class="s5-bar-col"><div class="s5-bar-val">4.2d</div><div class="s5-bar" id="bar-0" style="height:0%;width:100%"></div><div class="s5-bar-label">Q1 '24</div></div>
+                <div class="s5-bar-col"><div class="s5-bar-val">3.8d</div><div class="s5-bar" id="bar-1" style="height:0%;width:100%"></div><div class="s5-bar-label">Q2 '24</div></div>
+                <div class="s5-bar-col"><div class="s5-bar-val">2.1d</div><div class="s5-bar" id="bar-2" style="height:0%;width:100%"></div><div class="s5-bar-label">Q3 '24</div></div>
+                <div class="s5-bar-col"><div class="s5-bar-val highlight">1.6d</div><div class="s5-bar highlight" id="bar-3" style="height:0%;width:100%"></div><div class="s5-bar-label">Q4 '24</div></div>
+              </div>
+              <div class="s5-trend"><svg><use href="#i-trending-up"/></svg> 62% improvement in resolution time over 4 quarters</div>
+            </div>
+          </div>
+
+          <div class="s5-kpis">
+            <div class="card s5-kpi"><svg><use href="#i-file-check"/></svg><div><div class="kpi-label">Open Audits</div><div class="kpi-val">12</div></div></div>
+            <div class="card s5-kpi"><svg><use href="#i-clock"/></svg><div><div class="kpi-label">Avg. Resolution</div><div class="kpi-val">1.6d</div></div></div>
+            <div class="card s5-kpi"><svg><use href="#i-target"/></svg><div><div class="kpi-label">Compliance Score</div><div class="kpi-val">96%</div></div></div>
+            <div class="card s5-kpi"><svg><use href="#i-alert-tri"/></svg><div><div class="kpi-label">Risk Incidents</div><div class="kpi-val">3</div></div></div>
+          </div>
+
+          <div class="s5-cta">
+            <h3>Ready to drive <em>data-driven compliance</em> decisions.</h3>
+            <p>Eager to learn. Ready to execute. — Tanisha Syed</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+const SLIDES_DATA = [
+  { label: "Executive Summary", icon: "i-zap", num: "01" },
+  { label: "Skills Translation", icon: "i-arrow-lr", num: "02" },
+  { label: "Case Study", icon: "i-book", num: "03" },
+  { label: "GRC Mockup", icon: "i-database", num: "04" },
+  { label: "Dashboard", icon: "i-bar-chart", num: "05" },
+];
+
+let active = 0;
+
+// Build sidebar nav
+const navContainer = document.getElementById("nav-items");
+SLIDES_DATA.forEach((s, i) => {
+  const btn = document.createElement("button");
+  btn.className = "nav-btn" + (i === 0 ? " active" : "");
+  btn.innerHTML = `<svg><use href="#${s.icon}"/></svg><span>${s.label}</span><span class="nav-num">${s.num}</span>`;
+  btn.onclick = () => go(i);
+  navContainer.appendChild(btn);
+});
+
+// Build topbar dots
+const dotsContainer = document.getElementById("topbar-dots");
+SLIDES_DATA.forEach((_, i) => {
+  const d = document.createElement("div");
+  d.className = "dot" + (i === 0 ? " active" : "");
+  d.onclick = () => go(i);
+  dotsContainer.appendChild(d);
+});
+const counterEl = document.createElement("span");
+counterEl.className = "topbar-counter";
+counterEl.textContent = "01 / 05";
+dotsContainer.appendChild(counterEl);
+
+function go(idx) {
+  if (idx < 0 || idx > 4 || idx === active) return;
+  // Hide current
+  document.getElementById("slide-" + active).classList.remove("active");
+  // Show new
+  active = idx;
+  const newSlide = document.getElementById("slide-" + active);
+  newSlide.classList.remove("active");
+  void newSlide.offsetWidth; // reflow to retrigger animation
+  newSlide.classList.add("active");
+
+  // Update nav
+  document.querySelectorAll(".nav-btn").forEach((b, i) => b.classList.toggle("active", i === active));
+  document.querySelectorAll(".dot").forEach((d, i) => d.classList.toggle("active", i === active));
+  counterEl.textContent = String(active + 1).padStart(2, "0") + " / 05";
+
+  // Update arrows
+  const prev = document.getElementById("btn-prev");
+  const next = document.getElementById("btn-next");
+  prev.disabled = active === 0;
+  next.disabled = active === 4;
+  next.className = active === 4 ? "nav-arrow next-gold" : "nav-arrow next-gold";
+  if (active === 4) { next.className = "nav-arrow"; next.disabled = true; }
+  else { next.className = "nav-arrow next-gold"; next.disabled = false; }
+
+  // Scroll content to top
+  document.getElementById("content").scrollTop = 0;
+
+  // Trigger slide-specific animations
+  if (active === 2) animateCounter();
+  if (active === 4) animateCharts();
+}
+
+// Keyboard nav
+document.addEventListener("keydown", (e) => {
+  if (e.key === "ArrowRight" || e.key === "ArrowDown") { e.preventDefault(); go(active + 1); }
+  if (e.key === "ArrowLeft" || e.key === "ArrowUp") { e.preventDefault(); go(active - 1); }
+});
+
+// ── Slide 3 counter animation ──
+function animateCounter() {
+  const el = document.getElementById("counter");
+  const target = 10000;
+  const duration = 2000;
+  const start = performance.now();
+  function tick(now) {
+    const p = Math.min((now - start) / duration, 1);
+    const eased = 1 - Math.pow(1 - p, 4);
+    el.textContent = Math.floor(eased * target).toLocaleString() + "+";
+    if (p < 1) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+
+// ── Slide 5 chart animations ──
+function animateCharts() {
+  // Donut segments
+  const circ = 2 * Math.PI * 42; // ~263.89
+  const segs = [
+    { id: "seg-0", pct: 0.72 },
+    { id: "seg-1", pct: 0.18 },
+    { id: "seg-2", pct: 0.10 },
+  ];
+  segs.forEach((s, i) => {
+    const el = document.getElementById(s.id);
+    el.setAttribute("stroke-dasharray", `0 ${circ}`);
+    setTimeout(() => {
+      el.setAttribute("stroke-dasharray", `${s.pct * circ} ${circ}`);
+    }, 100 + i * 150);
+  });
+
+  // Bar chart
+  const bars = [
+    { id: "bar-0", pct: 84 },
+    { id: "bar-1", pct: 76 },
+    { id: "bar-2", pct: 42 },
+    { id: "bar-3", pct: 32 },
+  ];
+  bars.forEach((b, i) => {
+    const el = document.getElementById(b.id);
+    el.style.height = "0%";
+    setTimeout(() => { el.style.height = b.pct + "%"; }, 300 + i * 100);
+  });
+}
+
+// Initial animations
+animateCounter();
+</script>
+</body>
+</html>
